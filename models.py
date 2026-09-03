@@ -1,4 +1,4 @@
-"""Бизнес-модели и валидация данных."""
+ """Бизнес-модели и валидация данных."""
 
 from dataclasses import dataclass, field
 from typing import List, Optional, Dict
