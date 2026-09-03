@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Учителя - School Schedule{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex justify-between items-center">
+    <h1 class="text-3xl font-bold text-gray-800"><i class="fas fa-chalkboard-teacher text-primary mr-3"></i>Преподаватели</h1>
+    <button onclick="document.getElementById('addTeacherModal').classList.remove('hidden')" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
+        <i class="fas fa-plus mr-2"></i>Добавить учителя
+    </button>
+</div>
+
+<div class="bg-white rounded-lg shadow overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ФИО</th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Часов</th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Норма</th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Статус</th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Действия</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            {% for t in teachers %}
+            <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{{ t.fio }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-center">{{ t.current_hours }} ч.</td>
+                <td class="px-6 py-4 whitespace-nowrap text-center text-gray-500">{{ t.max_hours_week }} ч.</td>
+                <td class="px-6 py-4 whitespace-nowrap text-center">
+                    {% if t.is_overloaded %}
+                        <span class="badge badge-danger">⛔ Перебор</span>
+                    {% elif t.current_hours > t.max_hours_week %}
+                        <span class="badge badge-warning">⚠️ Превышение</span>
+                    {% else %}
+                        <span class="badge badge-success">✅ Норма</span>
+                    {% endif %}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <a href="/schedule/teacher/{{ t.id }}" class="text-primary hover:text-blue-800 mr-3"><i class="fas fa-calendar"></i> Расписание</a>
+                    <form action="/teachers/{{ t.id }}/delete" method="POST" class="inline" onsubmit="return confirm('Удалить учителя?');">
+                        <button type="submit" class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Модальное окно добавления -->
+<div id="addTeacherModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+        <h2 class="text-xl font-bold mb-4">Добавить учителя</h2>
+        <form action="/teachers/add" method="POST">
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">ФИО</label>
+                <input type="text" name="fio" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+            </div>
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Норма часов</label>
+                    <input type="number" name="max_hours" value="36" class="w-full border border-gray-300 rounded px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Порог предупреждения</label>
+                    <input type="number" name="warn_hours" value="40" class="w-full border border-gray-300 rounded px-3 py-2">
+                </div>
+            </div>
+            <div class="flex items-center mb-4 space-x-4">
+                <label class="flex items-center"><input type="checkbox" name="no_first" class="mr-2"> Не ставить 1-й урок</label>
+                <label class="flex items-center"><input type="checkbox" name="no_windows" class="mr-2"> Без окон</label>
+            </div>
+            <div class="flex justify-end space-x-3">
+                <button type="button" onclick="document.getElementById('addTeacherModal').classList.add('hidden')" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Отмена</button>
+                <button type="submit" class="px-4 py-2 bg-primary text-white rounded hover:bg-blue-600">Сохранить</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
