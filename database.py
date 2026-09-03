@@ -1,4 +1,4 @@
-"""Схема базы данных и операции CRUD."""
+ """Схема базы данных и операции CRUD."""
 
 import sqlite3
 from pathlib import Path
