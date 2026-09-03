@@ -1,0 +1,27 @@
+/* Кастомные стили для школьного расписания */
+.nav-link {
+    @apply px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary hover:bg-blue-50 transition;
+}
+.nav-link.active {
+    @apply text-primary bg-blue-50 font-semibold;
+}
+.schedule-cell {
+    @apply p-3 border border-gray-200 rounded-lg bg-white hover:shadow-md transition text-center min-h-[80px] flex flex-col justify-center;
+}
+.schedule-cell.empty {
+    @apply bg-gray-50 border-dashed border-gray-300 text-gray-400;
+}
+.badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+.badge-success { @apply bg-green-100 text-green-800; }
+.badge-warning { @apply bg-yellow-100 text-yellow-800; }
+.badge-danger { @apply bg-red-100 text-red-800; }
+.badge-info { @apply bg-blue-100 text-blue-800; }
+
+/* Стили для печати */
+@media print {
+    nav, footer, button, select, .no-print { display: none !important; }
+    .schedule-cell { border: 1px solid #000 !important; break-inside: avoid; }
+    body { background: white; }
+}
